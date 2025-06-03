@@ -1,178 +1,218 @@
-# AI-Powered CRM Setup Instructions
+# Mini CRM
 
-This document provides setup instructions for the enhanced CRM features with Gemini AI integration and Firebase authentication.
+Welcome to the **Mini CRM** project! This is a demonstration of a basic yet powerful Customer Relationship Management (CRM) application enhanced with AI capabilities for intelligent campaign creation.
 
-## Features Added
+---
 
-### 1. AI-Powered Natural Language to Rule Builder
-- Convert natural language descriptions into structured campaign rules
-- Uses Google's Gemini AI for intelligent rule generation
-- Supports complex audience targeting scenarios
+## Table of Contents
+- [Features](#features)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Running the Application](#running-the-application)
+- [Technologies Used](#technologies-used)
+- [AI-Powered Enhancements](#ai-powered-enhancements)
+- [Usage Examples](#usage-examples)
+- [Authentication](#authentication)
+- [Troubleshooting](#troubleshooting)
+- [Future Enhancements](#future-enhancements)
+- [Contributing](#contributing)
+- [License](#license)
 
-### 2. Enhanced Campaign Creation UI
-- Modern, intuitive interface for campaign creation
-- Real-time audience size preview
-- Advanced rule builder with AND/OR logic
-- Integration with existing Firebase authentication
+---
 
-### 3. Real-time Audience Preview
-- Live audience size calculation based on rules
-- Debounced API calls for optimal performance
-- MongoDB query optimization
+## Features
 
-## Setup Instructions
+- User authentication with Firebase (Google OAuth)
+- CRUD operations for customer data
+- Real-time updates and notifications via RabbitMQ Cloud
+- Responsive UI built with Next.js, ShadCN, and TailwindCSS
+- AI-powered natural language to rule builder for campaign creation using Google Gemini AI
+- Real-time audience size preview with optimized MongoDB queries
+- Modular, strongly-typed codebase using TypeScript
+
+---
+
+## Getting Started
 
 ### Prerequisites
+
+Ensure you have the following installed and configured:
+
 - Node.js (v14 or higher)
-- MongoDB database
+- pnpm (v6 or higher)
+- MongoDB Atlas account with connection URI
+- RabbitMQ Cloud account
+- Firebase project with authentication enabled
 - Google Gemini AI API key
-- Firebase project (already configured)
 
-### 1. Install Dependencies
+### Installation
 
-#### Client Dependencies
+Clone the repository and install dependencies for both client and server:
+
+```bash
+git clone https://github.com/mangalamraj/CRM.git
+cd CRM
+```
+
+Install client dependencies:
+
 ```bash
 cd client
-npm install @radix-ui/react-select
+pnpm install
+pnpm install @radix-ui/react-select
 ```
 
-#### Server Dependencies
+Install server dependencies:
+
 ```bash
-cd server
-npm install @google/generative-ai
+cd ../server
+pnpm install
+pnpm install @google/generative-ai
 ```
 
-### 2. Environment Configuration
+### Environment Configuration
 
-Create a `.env` file in the `server` directory with the following variables:
+Create a `.env` file inside the `server` directory with the following variables:
 
 ```bash
 # Gemini AI Configuration
 GEMINI_API_KEY=your_gemini_api_key_here
 
-# MongoDB Configuration (existing)
+# MongoDB Configuration
 MONGODB_URI=your_mongodb_connection_string
 
-# RabbitMQ Configuration (existing)
+# RabbitMQ Configuration
 RABBITMQ_URL=your_rabbitmq_url
 ```
 
-### 3. Get Gemini API Key
+### Running the Application
 
-1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Create a new API key
-3. Copy the API key and add it to your `.env` file
+Start the server:
 
-### 4. Run the Application
-
-#### Start the Server
 ```bash
 cd server
-npm run develop
+pnpm run develop
 ```
 
-#### Start the Client
+Start the client:
+
 ```bash
-cd client
-npm run dev
+cd ../client
+pnpm run dev
 ```
 
-### 5. Access New Features
+Open your browser and navigate to `http://localhost:3000`.
 
-1. **Login**: Use the existing Firebase Google authentication
-2. **Navigate**: Click on "AI Campaigns" in the navbar
-3. **Create Campaign**: Use the "Create Campaign" button to access the AI-powered form
+---
+
+## Technologies Used
+
+### Frontend
+- **Next.js** – React framework for server-side rendering and static site generation
+- **TypeScript** – Typed superset of JavaScript
+- **ShadCN** – React component design system built with TailwindCSS
+- **TailwindCSS** – Utility-first CSS framework
+- **Radix UI** – Accessible UI primitives (used for select components)
+
+### Backend
+- **Express.js** – Node.js web framework
+- **MongoDB Atlas** – Cloud-hosted NoSQL database
+- **Firebase Authentication** – User authentication and session management
+- **RabbitMQ Cloud** – Cloud-based message broker for real-time updates
+- **Google Gemini AI** – AI service for natural language processing and rule generation
+
+---
+
+## AI-Powered Enhancements
+
+### Features Added
+
+- **Natural Language to Rule Builder:** Convert plain English campaign descriptions into structured targeting rules using Gemini AI.
+- **Enhanced Campaign Creation UI:** Intuitive interface with real-time audience size preview and advanced AND/OR logic for rules.
+- **Real-time Audience Preview:** Live calculation of campaign audience size with debounced API calls and optimized MongoDB queries.
+
+### Workflow
+
+1. Login with Firebase Google authentication.
+2. Navigate to the "AI Campaigns" section.
+3. Use the AI-powered form to create campaigns by entering natural language rules or manually building them.
+4. Preview audience size in real-time before launching campaigns.
+
+---
 
 ## Usage Examples
 
-### AI Rule Generation Examples
+Try these natural language inputs in the AI Rule Generator:
 
-Try these natural language queries in the AI Rule Generator:
+- **High-Value Customers:**  
+  `"Customers who spent more than $500 and haven't visited in 30 days"`
 
-1. **High-Value Customers**: 
-   "Customers who spent more than $500 and haven't visited in 30 days"
+- **Frequent Visitors:**  
+  `"Users who visit more than 5 times but spend less than $100"`
 
-2. **Frequent Visitors**: 
-   "Users who visit more than 5 times but spend less than $100"
+- **Geographic Targeting:**  
+  `"Customers from New York who spent over $200"`
 
-3. **Geographic Targeting**: 
-   "Customers from New York who spent over $200"
+- **Dormant Users:**  
+  `"Users who haven't visited in 60 days but previously spent over $300"`
 
-4. **Dormant Users**: 
-   "Users who haven't visited in 60 days but previously spent over $300"
-
-### Rule Builder Features
-
-- **Field Options**: Total Spend, Visit Count, Last Seen Days, City
-- **Operators**: >, <, =, >=, <=, !=
-- **Logic**: AND/OR conditions between rules
-- **Real-time Preview**: Audience size updates as you modify rules
-
-## Technical Implementation
-
-### Frontend Components
-- `AIRuleGenerator`: Natural language to rules conversion
-- `RuleBuilder`: Manual rule creation and editing
-- `RuleRow`: Individual rule configuration
-- `AudiencePreview`: Real-time audience size calculation
-- `CampaignForm`: Complete campaign creation workflow
-
-### Backend APIs
-- `POST /ai/generate-rules`: Convert natural language to rules
-- `POST /ai/audience-preview`: Calculate audience size
-- `POST /ai/campaigns`: Create campaigns with AI-generated rules
-
-### Database Integration
-- Uses existing MongoDB customer schema
-- Optimized queries for audience size calculation
-- Support for complex rule combinations
+---
 
 ## Authentication
 
-The system uses the existing Firebase authentication:
-- Google OAuth integration
-- User session management via AuthProvider
-- Protected routes for authenticated users
+- Firebase Authentication with Google OAuth
+- Session management via React context (`AuthProvider`)
+- Protected routes to secure campaign management features
 
-## Error Handling
-
-- Graceful fallbacks for AI service failures
-- User-friendly error messages
-- Robust validation for rule generation
-
-## Performance Optimizations
-
-- Debounced audience preview requests (500ms)
-- Optimized MongoDB aggregation queries
-- Efficient rule-to-query conversion
-- Client-side caching of rule configurations
-
-## Future Enhancements
-
-- Support for more complex OR conditions
-- Additional customer fields for targeting
-- Campaign performance analytics
-- A/B testing capabilities
-- Email template integration
+---
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Gemini API Key Issues**
-   - Ensure the API key is correctly set in `.env`
-   - Verify the key has proper permissions
-   - Check API quotas and limits
+- **Gemini API Key:**  
+  Ensure the key is correctly set in `.env` and has required permissions.
 
-2. **Database Connection**
-   - Verify MongoDB URI is correct
-   - Ensure database is accessible
-   - Check customer data exists for preview
+- **MongoDB Connection:**  
+  Verify your MongoDB URI and database accessibility.
 
-3. **Authentication Issues**
-   - Confirm Firebase configuration
-   - Check browser localStorage for user session
-   - Verify user is logged in before accessing campaigns
+- **Firebase Authentication:**  
+  Check Firebase project configuration and user login status.
+
+- **RabbitMQ Connection:**  
+  Confirm RabbitMQ URL and connectivity.
 
 ### Support
-For technical support or questions about the implementation, refer to the existing CRM documentation or contact the development team. 
+
+For further assistance, refer to the project documentation or contact the development team.
+
+---
+
+## Future Enhancements
+
+- Support for more complex OR logic in campaign rules
+- Additional customer fields for richer targeting
+- Campaign performance analytics dashboard
+- A/B testing capabilities
+- Email template integration for campaigns
+
+---
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit pull requests for improvements or bug fixes.
+
+---
+
+## License
+
+This project is created and maintained by **Manish Soni**.
+
+---
+
+Thank you for exploring the Mini CRM project!  
+Feel free to reach out for collaboration or questions.
+
+
+
